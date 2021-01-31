@@ -1,7 +1,11 @@
-spotdl https://open.spotify.com/track/5ghIJDpPoe3CfHMGu71E6T\?si\=eB8jHOBwS22wCP5gZExZrQ
+spotdl $1 > spotdl.log
+SONG=$(tail -n1 spotdl.log | sed "s/Searching for: //")
 
-mv "Nirvana - Smells Like Teen Spirit.mp3" "tracks/Nirvana - Smells Like Teen Spirit"
+echo "$SONG"
 
-spleeter separate -p spleeter:4stems -o "tracks" "tracks/Nirvana - Smells Like Teen Spirit/Nirvana - Smells Like Teen Spirit.mp3"
+mkdir -p "tracks/$SONG"
+mv "$SONG.mp3" "tracks/$SONG"
 
-ffmpeg -i bass.wav -i other.wav -i vocals.wav -filter_complex amix=inputs=3:duration=longest drumless.wav
+spleeter separate -p spleeter:4stems -o "tracks" "tracks/$SONG/$SONG.mp3"
+
+cd "tracks/$SONG" && ffmpeg -i bass.wav -i other.wav -i vocals.wav -filter_complex amix=inputs=3:duration=longest drumless.wav
